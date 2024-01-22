@@ -5,15 +5,16 @@ const Button = ({ text, addOne }) => {
 }
 
 const Stats = ({g, n, b}) => {
+  const all = g+n+b
+  if (all===0) return <p>No feedback given</p>
   return (
     <>
-      <h1>Statistics</h1>
       <div>Good: {g}</div>
       <div>Neutral: {n}</div>
       <div>Bad: {b}</div>
       <div>All: {g+n+b}</div>
-      <div>Average: {(g-b)/(g+n+b)}</div>
-      <div>Positive: {g/(g+n+b)} %</div>
+      <div>Average: {(g-b)/all}</div>
+      <div>Positive: {g/all} %</div>
     </>
   )
 }
@@ -36,6 +37,7 @@ const App = () => {
       <Button text={"good"} addOne={addGood}/>
       <Button text={"neutral"} addOne={addNeutral}/>
       <Button text={"bad"} addOne={addBad}/>
+      <h1>Statistics</h1>
       <Stats g={good} n={neutral} b={bad}/>
     </div>
   )
