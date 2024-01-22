@@ -5,6 +5,21 @@ const DisplayVotes = ({ votes, selected }) => {
   return <p>This anecdote has {votes[selected]} votes.</p>
 }
 
+const DisplayBest = ({ votes, anecdotes }) => {
+  const voteArr = Object.values(votes)
+  console.log(voteArr)
+  const mostVotes = Math.max(...voteArr)
+  const bestQuote = voteArr.indexOf(mostVotes)
+  console.log("maximum", mostVotes, "best", bestQuote)
+  return (
+    <>
+      <h1>Quote with the most votes</h1>
+      <p>{anecdotes[bestQuote]}</p>
+      <DisplayVotes votes={votes} selected={bestQuote}/>
+    </>
+  )
+}
+
 const App = () => {
   const anecdotes = [
     'If it hurts, do it more often.',
@@ -36,10 +51,12 @@ const App = () => {
 
   return (
     <div>
-      <button onClick={newQuote}>Get random anecdote</button>
+      <h1>Quote of the day</h1>
       <p>{anecdotes[selected]}</p>
+      <button onClick={newQuote}>Get new anecdote</button>
       <DisplayVotes votes={votes} selected={selected}/>
       <button onClick={() => newVote(selected)}>Vote for this one</button>
+      <DisplayBest votes={votes} anecdotes={anecdotes}/>
     </div>
   )
 }
