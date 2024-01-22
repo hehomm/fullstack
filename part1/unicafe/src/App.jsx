@@ -4,23 +4,38 @@ const Button = ({ text, addOne }) => {
   return <button onClick={addOne} id={text}>{text}</button>
 }
 
-const StatisticLine = ({ text, value }) => {
-  if (text==="Positive") return <div>{text}: {value*100} %</div>
-  return <div>{text}: {value}</div>
-}
-
 const Stats = ({g, n, b}) => {
   const all = g+n+b
   if (all===0) return <p>No feedback given</p>
   return (
-    <>
-      <StatisticLine text={"Good"} value={g}/>
-      <StatisticLine text={"Neutral"} value={n}/>
-      <StatisticLine text={"Bad"} value={b}/>
-      <StatisticLine text={"All"} value={all}/>
-      <StatisticLine text={"Average"} value={(g-b)/all}/>
-      <StatisticLine text={"Positive"} value={g/all}/>
-    </>
+    <table>
+      <tbody>
+        <tr>
+          <td>Good</td>
+          <td>{g}</td>
+        </tr>
+        <tr>
+          <td>Neutral</td>
+          <td>{n}</td>
+        </tr>
+        <tr>
+          <td>Bad</td>
+          <td>{b}</td>
+        </tr>
+        <tr>
+          <td>All</td>
+          <td>{all}</td>
+        </tr>
+        <tr>
+          <td>Average</td>
+          <td>{(g-b)/all}</td>
+        </tr>
+        <tr>
+          <td>Positive</td>
+          <td>{g/all*100} %</td>
+        </tr>
+      </tbody>
+    </table>
   )
 }
 
