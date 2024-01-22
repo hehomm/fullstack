@@ -8,9 +8,12 @@ const Stats = ({g, n, b}) => {
   return (
     <>
       <h1>Statistics</h1>
-      <p>Good: {g}</p>
-      <p>Neutral: {n}</p>
-      <p>Bad: {b}</p>
+      <div>Good: {g}</div>
+      <div>Neutral: {n}</div>
+      <div>Bad: {b}</div>
+      <div>All: {g+n+b}</div>
+      <div>Average: {(g-b)/(g+n+b)}</div>
+      <div>Positive: {g/(g+n+b)} %</div>
     </>
   )
 }
