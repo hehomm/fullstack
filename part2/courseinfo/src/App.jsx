@@ -24,9 +24,8 @@ const Course = ({ course }) => {
   const { id, name, parts } = course
   console.log(id, name)
   console.log(parts)
-  const allExercises = parts.map(part => part.exercises)
-  const sum = allExercises.reduce((a, b) => a+b, 0)
-  console.log(sum)
+  const sum = Object.values(parts).reduce((a, {exercises}) => a+exercises, 0)
+  console.log('sum', sum)
   return (
     <div>
       <Header course={name}/>
