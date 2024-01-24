@@ -1,6 +1,6 @@
 const Header = ({ course }) => <h1>{course}</h1>
 
-const Total = ({ sum }) => <p>Number of exercises {sum}</p>
+const Total = ({ sum }) => <b>Total number of exercises {sum}</b>
 
 const Part = ({ part }) => {
 console.log('part', part);
@@ -24,10 +24,14 @@ const Course = ({ course }) => {
   const { id, name, parts } = course
   console.log(id, name)
   console.log(parts)
+  const allExercises = parts.map(part => part.exercises)
+  const sum = allExercises.reduce((a, b) => a+b, 0)
+  console.log(sum)
   return (
     <div>
       <Header course={name}/>
       <Content parts={parts}/>
+      <Total sum={sum}/>
     </div>
   )
 }
