@@ -8,6 +8,13 @@ const App = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault()
+    console.log(newName);
+    const exists = persons.reduce((prev, current) => prev ? true : current.name===newName, false)
+    console.log(exists)
+    if (exists) {
+      alert(`${newName} is already added to the phonebook`)
+      return
+    }
     const newPerson = {name: newName}
     console.log(newPerson)
     setPersons(persons.concat(newPerson))
@@ -15,8 +22,9 @@ const App = () => {
   }
 
   const handleChange = (event) => {
-    console.log(event.target.value)
-    setNewName(event.target.value)
+    const name = event.target.value
+    console.log(name)
+    setNewName(name)
   }
 
   return (
@@ -31,7 +39,7 @@ const App = () => {
         </div>
       </form>
       <h2>Numbers</h2>
-      {persons.map(person => <div>{person.name}</div>)}
+      {persons.map(person => <div key={person.name}>{person.name}</div>)}
     </div>
   )
 }
