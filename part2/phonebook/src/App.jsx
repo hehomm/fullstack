@@ -19,6 +19,32 @@ const Display = ({ persons, search }) => {
   return <><RenderNames persons={found}/></>
 }
 
+const SearchForm = ({ search, handleSearch }) => {
+  return (
+    <form>
+      <div>
+        search: <input value={search} onChange={handleSearch}/>
+       </div>
+    </form>
+  )
+}
+
+const AddingForm = ({ newName, newNumber, handleNameChange, handleNumberChange, handleSubmit }) => {
+  return (
+    <form onSubmit={handleSubmit}>
+      <div>
+        name: <input value={newName} onChange={handleNameChange}/>
+      </div>
+      <div>
+        number: <input value={newNumber} onChange={handleNumberChange}/>
+      </div>
+      <div>
+        <button type="submit">add</button>
+      </div>
+    </form>
+  )
+}
+
 const App = () => {
   const [persons, setPersons] = useState([]) 
   const [newName, setNewName] = useState('')
@@ -67,24 +93,14 @@ const App = () => {
   return (
     <div>
       <h1>Phonebook</h1>
-      <form>
-        <div>
-          search: <input value={search} onChange={handleSearch}/>
-        </div>
-      </form>
+      <SearchForm search={search} handleSearch={handleSearch}/>
 
       <h2>Add new name</h2>
-      <form onSubmit={handleSubmit}>
-        <div>
-          name: <input value={newName} onChange={handleNameChange}/>
-        </div>
-        <div>
-          number: <input value={newNumber} onChange={handleNumberChange}/>
-        </div>
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
+      <AddingForm newName={newName} newNumber={newNumber}
+                  handleNameChange={handleNameChange}
+                  handleNumberChange={handleNumberChange}
+                  handleSubmit={handleSubmit}/>
+      
       <h2>Numbers</h2>
       <Display persons={persons} search={search}/>
     </div>
