@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios'
+import personService from './services/persons'
 
 const RenderNames = ({persons}) => {
   return (
@@ -78,8 +79,14 @@ const App = () => {
       return
     }
     const newPerson = {name: newName, number: newNumber}
+  
     console.log(newPerson)
-    setPersons(persons.concat(newPerson))
+    personService
+      .addPerson(newPerson)
+      .then(response => {
+        console.log(response)
+        setPersons(persons.concat(response))
+      })
     setNewName('')
     setNewNumber('')
   }
