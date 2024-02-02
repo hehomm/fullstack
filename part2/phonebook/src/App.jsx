@@ -2,23 +2,32 @@ import { useState, useEffect } from 'react'
 import axios from 'axios'
 import personService from './services/persons'
 
-const RenderNames = ({persons}) => {
+const RenderOne = ({person, handleDelete}) => {
   return (
     <div>
-      {persons.map(person => <div key={person.name} >{person.name} {person.number}</div>)}
+      {person.name} {person.number} 
+      <button onClick={() => handleDelete(person)}>delete</button>
+    </div>
+  )
+}
+
+const RenderNames = ({persons, handleDelete}) => {
+  return (
+    <div>
+      {persons.map(person => <RenderOne person={person} handleDelete={handleDelete} key={person.name}/>)}
     </div>
     )
 }
 
-const Display = ({ persons, search }) => {
+const Display = ({ persons, search, handleDelete }) => {
   // display all names if search bar is empty
   // otherwise display search results
-  if (search==='') return <><RenderNames persons={persons}/></>
+  if (search==='') return <><RenderNames persons={persons} handleDelete={handleDelete}/></>
   const re = new RegExp(`${search}`, 'i')
   console.log('re', re);
   const found = persons.filter(person => re.test(person.name))
   console.log(found);
-  return <><RenderNames persons={found}/></>
+  return <><RenderNames persons={found} handleDelete={handleDelete}/></>
 }
 
 const SearchForm = ({ search, handleSearch }) => {
@@ -54,14 +63,17 @@ const App = () => {
   const [newNumber, setNewNumber] = useState('')
   const [search, setSearch] = useState('')
 
-  useEffect(() => {
-    console.log('effect');
-    axios
-      .get('http://localhost:3001/persons')
+  const reload = () => {
+    console.log('reloading data')
+    personService
+      .loadPersons()
       .then(response => {
+        console.log('setting state')
         setPersons(response.data)
       })
-  }, [])
+  }
+
+  useEffect(reload, [])
 
   const handleSubmit = (event) => {
     event.preventDefault()
@@ -108,6 +120,18 @@ const App = () => {
     setSearch(event.target.value)
   }
 
+  const handleDelete = (person) => {
+    if (window.confirm(`Delete ${person.name}?`)) {
+      console.log(person.id);
+      personService
+        .deletePerson(person)
+        .then(response => console.log(response))
+      const newPersons = persons.filter(p => p.id!=person.id)
+      console.log('setting state');
+      setPersons(newPersons)
+    }
+  }
+
   return (
     <div>
       <h1>Phonebook</h1>
@@ -120,7 +144,7 @@ const App = () => {
                   handleSubmit={handleSubmit}/>
       
       <h2>Numbers</h2>
-      <Display persons={persons} search={search}/>
+      <Display persons={persons} search={search} handleDelete={handleDelete}/>
     </div>
   )
 }

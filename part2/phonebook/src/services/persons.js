@@ -9,4 +9,19 @@ const addPerson = newPerson => {
     )
 }
 
-export default {addPerson}
+const deletePerson = person => {
+    console.log('deleting person')
+    return (
+        axios
+            .delete(`${url}/${person.id}`)
+    )
+}
+
+const loadPersons = () => {
+    return (
+        axios
+            .get(url)
+    )
+}
+
+export default {addPerson, deletePerson, loadPersons}
