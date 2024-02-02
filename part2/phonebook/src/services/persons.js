@@ -24,4 +24,13 @@ const loadPersons = () => {
     )
 }
 
-export default {addPerson, deletePerson, loadPersons}
+const updateNumber = (person, id) => {
+    console.log('updating number')
+    return (
+        axios
+            .put(`${url}/${id}`, person)
+            .then(response => response.data)
+    )
+}
+
+export default {addPerson, deletePerson, loadPersons, updateNumber}

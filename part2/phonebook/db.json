@@ -1,13 +1,8 @@
 {
   "persons": [
     {
-      "name": "Ada Lovelace",
-      "number": "39-44-5323523",
-      "id": "2"
-    },
-    {
       "name": "Dan Abramov",
-      "number": "12-43-234345",
+      "number": "1234567",
       "id": "3"
     },
     {
@@ -16,9 +11,14 @@
       "id": "4"
     },
     {
-      "id": "1344",
-      "name": "Test Dude",
-      "number": "33333333"
+      "name": "Test Guy",
+      "number": "123344",
+      "id": "6c39"
+    },
+    {
+      "name": "New Person",
+      "number": "99999999",
+      "id": "45e5"
     }
   ]
 }

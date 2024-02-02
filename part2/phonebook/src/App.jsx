@@ -81,17 +81,27 @@ const App = () => {
     // check if name is already in persons
     const exists = persons.reduce((prev, current) => prev ? true : current.name===newName, false)
     console.log(exists)
+    const newPerson = {name: newName, number: newNumber}
+
     if (exists) {
-      alert(`${newName} is already added to the phonebook`)
-      return
+      if (window.confirm(`${newName} is alredy in phonebook. Update number?`)) {
+        const oldPerson = persons.find(p => p.name === newName)
+        personService
+          .updateNumber(newPerson, oldPerson.id)
+          .then(response => setPersons(persons.map(p => p.name !== newName ? p : response)))
+        setNewName('')
+        setNewNumber('')
+        return
+      } else {
+        return
+      }
     }
     // don't allow empty name submissions
     if (newName==='') {
       alert('Enter a name')
       return
     }
-    const newPerson = {name: newName, number: newNumber}
-  
+    
     console.log(newPerson)
     personService
       .addPerson(newPerson)
