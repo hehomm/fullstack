@@ -56,12 +56,37 @@ const AddingForm = ({ newName, newNumber, handleNameChange, handleNumberChange, 
   )
 }
 
+const SuccessfulMessage = ({message}) => {
+  if (message === null) {
+    return null
+  } else {
+    return (
+      <div className='successful-message'>
+        {message}
+      </div>
+    )
+  }
+}
+const ErrorMessage = ({message}) => {
+  if (message === null) {
+    return null
+  } else {
+    return (
+      <div className='error-message'>
+        {message}
+      </div>
+    )
+  }
+}
+
 const App = () => {
   
   const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [search, setSearch] = useState('')
+  const [sucMessage, setSucMessage] = useState(null)
+  const [errMessage, setErrMessage] = useState(null)
 
   const reload = () => {
     console.log('reloading data')
@@ -74,6 +99,11 @@ const App = () => {
   }
 
   useEffect(reload, [])
+
+  const dispayMessage = (setFunction, messg) => {
+    setFunction(messg)
+    setTimeout(() => setFunction(null), 3000)
+  }
 
   const handleSubmit = (event) => {
     event.preventDefault()
@@ -89,6 +119,8 @@ const App = () => {
         personService
           .updateNumber(newPerson, oldPerson.id)
           .then(response => setPersons(persons.map(p => p.name !== newName ? p : response)))
+        // display message
+        dispayMessage((message) => setSucMessage(message), 'Number updated successfully.')
         setNewName('')
         setNewNumber('')
         return
@@ -109,6 +141,8 @@ const App = () => {
         console.log(response)
         setPersons(persons.concat(response))
       })
+    console.log('message');
+    dispayMessage((message) => setSucMessage(message), 'Number added successfully.')
     setNewName('')
     setNewNumber('')
   }
@@ -139,6 +173,8 @@ const App = () => {
       const newPersons = persons.filter(p => p.id!=person.id)
       console.log('setting state');
       setPersons(newPersons)
+      console.log('displaying message');
+      dispayMessage((message) => setSucMessage(message), 'Number deleted successfully.')
     }
   }
 
@@ -155,6 +191,9 @@ const App = () => {
       
       <h2>Numbers</h2>
       <Display persons={persons} search={search} handleDelete={handleDelete}/>
+      <br/>
+      <SuccessfulMessage message={sucMessage}/>
+      <ErrorMessage message={errMessage}/>
     </div>
   )
 }

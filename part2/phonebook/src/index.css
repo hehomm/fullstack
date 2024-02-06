@@ -1,0 +1,20 @@
+.successful-message {
+  color: green;
+  background: palegoldenrod;
+  font-size: 20px;
+  border-style: solid;
+  border-radius: 5px;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.error-message {
+  color:red;
+  background: darksalmon;
+  font-size: 20px;
+  border-style: solid;
+  border-radius: 5px;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
