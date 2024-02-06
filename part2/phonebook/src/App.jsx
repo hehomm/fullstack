@@ -170,6 +170,8 @@ const App = () => {
       personService
         .deletePerson(person)
         .then(response => console.log(response))
+        .catch(error => dispayMessage((mssg) => setErrMessage(mssg),
+          `Error: ${person.name} not in server`))
       const newPersons = persons.filter(p => p.id!=person.id)
       console.log('setting state');
       setPersons(newPersons)
