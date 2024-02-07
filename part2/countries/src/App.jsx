@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import countryService from './services/countries'
 
-const Display = ({countries, search}) => {
+const Display = ({countries, search, onClick}) => {
   const names = countries.map(country => country.name.common)
   const re = new RegExp(`${search}`, 'i')
   const found = names.filter(name => re.test(name))
@@ -9,7 +9,8 @@ const Display = ({countries, search}) => {
   if (found.length===1) {
     return <GetInfo countries={countries} name={found[0]}/>
   } else if (found.length<11) {
-    return <GetNames found={found}/>
+    console.log('1<n<11');
+    return <GetNames found={found} onClick={onClick}/>
   } else if (search!=='') {
     return <p>Too many results, try a more narrow search</p>
   }
@@ -30,24 +31,32 @@ const GetInfo = ({countries, name}) => {
 }
 
 const BasicInfo = ({info}) => {
-  return (
-    <>
-      <div>Capital: {info.capital[0]}</div>
-      <div>Area: {info.area} km2</div>
-    </>
-  )
+  if (info.capital) {
+    return (
+      <>
+        <div>Capital: {info.capital[0]}</div>
+        <div>Area: {info.area} km2</div>
+      </>
+    )
+  } else {
+    return <div>Area: {info.area} km2</div>
+  }
+
 }
 
 const Languages = ({info}) => {
-  const langs = Object.values(info.languages)
-  console.log(langs);
-  return (
-    <>
-      <br/>
-      <b>Languages:</b>
-      {langs.map(l => <li key={l}>{l}</li>)}
-    </>
-  )
+  if (info.languages) {
+    const langs = Object.values(info.languages)
+    console.log(langs);
+    return (
+      <>
+        <br/>
+        <b>Languages:</b>
+        {langs.map(l => <li key={l}>{l}</li>)}
+      </>
+    )
+  } else {return null}
+
 }
 
 const Flag = ({info}) => {
@@ -61,12 +70,23 @@ const Flag = ({info}) => {
   )
 }
 
-const GetNames = ({found}) => {
+const GetOne = ({name, onClick}) => {
+  console.log('getOne', name);
   return (
-    <>
+    <div>
+      {name} 
+      {' '}<button onClick={() => onClick(name)}>show</button>
+    </div>
+  )
+}
+
+const GetNames = ({found, onClick}) => {
+  console.log(found);
+  return (
+    <div>
       <h3>Results:</h3>
-      {found.map(name => <li key={name}>{name}</li>)}
-    </>
+      {found.map(name => <GetOne name={name} onClick={onClick} key={name}/>)}
+    </div>
   )
 }
 
@@ -91,11 +111,17 @@ const App = () => {
     setSearch(event.target.value)
   } 
 
+  const onClick = (name) => {
+    console.log('onclick', name);
+    setSearch(name)
+    return <GetInfo countries={countries} name={name}/>
+  }
+
   return (
     <div>
       <h1>Countries</h1>
       Search: <input value={search} onChange={handleSearch}></input>
-      <Display countries={countries} search={search}/>
+      <Display countries={countries} search={search} onClick={onClick}/>
     </div>
   )
 }
