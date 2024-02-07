@@ -1,13 +1,13 @@
 import { useState, useEffect } from 'react'
 import countryService from './services/countries'
 
-const Display = ({countries, search, onClick}) => {
+const Display = ({countries, search, onClick, weather, setCountry}) => {
   const names = countries.map(country => country.name.common)
   const re = new RegExp(`${search}`, 'i')
   const found = names.filter(name => re.test(name))
   console.log(found);
   if (found.length===1) {
-    return <GetInfo countries={countries} name={found[0]}/>
+    return <GetInfo countries={countries} name={found[0]} weather={weather} setCountry={setCountry}/>
   } else if (found.length<11) {
     console.log('1<n<11');
     return <GetNames found={found} onClick={onClick}/>
@@ -16,18 +16,37 @@ const Display = ({countries, search, onClick}) => {
   }
 }
 
-const GetInfo = ({countries, name}) => {
+const GetInfo = ({countries, name, weather, setCountry}) => {
   console.log(name)
   const info = countries.filter(country => country.name.common===name)[0]
   console.log(info)
+  setCountry(info)
   return (
     <div>
       <h2>{name}</h2>
       <BasicInfo info={info}/>
       <Languages info={info}/>
       <Flag info={info}/>
+      <Weather info={info} weather={weather} setCountry={setCountry}/>
     </div>
   )
+}
+
+const Weather = ({info, weather}) => {
+  if (info.capital) {
+    console.log('weather', weather);
+    console.log('icon', weather.weather[0].icon)
+    return (
+      <div>
+        <br/>
+        <div><b>Weather in {info.capital[0]}:</b></div>
+        <div>Temperature: {weather.main.temp} °C</div>
+        <div>Wind: {weather.wind.speed} m/s</div>
+        <img src={`https://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png`}></img>
+      </div>
+    )
+  } else {return null}
+  
 }
 
 const BasicInfo = ({info}) => {
@@ -93,6 +112,8 @@ const GetNames = ({found, onClick}) => {
 const App = () => {
   const [search, setSearch] = useState('')
   const [countries, setCountries] = useState([])
+  const [weather, setWeather] = useState(null)
+  const [country, setCountry] = useState(null)
 
   const reload = () => {
     console.log('reloading data')
@@ -105,6 +126,7 @@ const App = () => {
     }
 
   useEffect(reload, [])
+  
 
   const handleSearch = (event) => {
     console.log(event.target.value);
@@ -114,14 +136,25 @@ const App = () => {
   const onClick = (name) => {
     console.log('onclick', name);
     setSearch(name)
-    return <GetInfo countries={countries} name={name}/>
   }
+
+  const getWeather = (info) => {
+    console.log('getting weather data')
+    if (info) {
+      countryService
+      .loadWeather(info.capitalInfo.latlng[0], info.capitalInfo.latlng[1])
+      .then(response => setWeather(response))
+    }
+  }
+
+  useEffect(() => getWeather(country), [country])
 
   return (
     <div>
       <h1>Countries</h1>
       Search: <input value={search} onChange={handleSearch}></input>
-      <Display countries={countries} search={search} onClick={onClick}/>
+      <Display countries={countries} search={search}
+          onClick={onClick} weather={weather} setCountry={setCountry}/>
     </div>
   )
 }
